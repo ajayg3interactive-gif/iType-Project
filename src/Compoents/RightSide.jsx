@@ -25,9 +25,22 @@ export default function RightSide() {
   const handleRegister = (e) => {
     e.preventDefault();
     const newErrors = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phnRegex = /^[0-9]{10}$/;
+
     Object.entries(formData).forEach(([key, value]) => {
       if (!value) newErrors[key] = "This field is required";
     });
+    if (formData.email && !emailRegex.test(formData.email)) {
+      newErrors.email = "Please enter a valid email address";
+    }
+    if (formData.phoneNumber && !phnRegex.test(formData.phoneNumber)) {
+      newErrors.phoneNumber = "Please enter a valid 10-digit phone number";
+    }
+
+    if (formData.password && formData.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters long";
+    }
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length > 0) return;
@@ -45,7 +58,7 @@ export default function RightSide() {
       <Box
         component={"form"}
         onSubmit={handleRegister}
-        sx={{ display: "flex", flexDirection: "column", gap:"32px"}}
+        sx={{ display: "flex", flexDirection: "column", gap: "32px" }}
       >
         <Box
           sx={{
@@ -112,6 +125,7 @@ export default function RightSide() {
 
         <Box sx={{ display: "flex" }}>
           <Checkbox
+            defaultChecked
             value=""
             // checked={}
             // onChange={}

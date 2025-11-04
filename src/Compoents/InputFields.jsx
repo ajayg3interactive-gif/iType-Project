@@ -16,6 +16,7 @@ import { caES } from "@mui/material/locale";
 import { useState } from "react";
 
 export const InputField = ({ name, label, onChange, error, helperText }) => {
+  const [type, setType] = useState("");
   const getIcon = () => {
     switch (name) {
       case "fullname":
@@ -31,7 +32,7 @@ export const InputField = ({ name, label, onChange, error, helperText }) => {
   const [eyeOpen, setEyeOpen] = useState(false);
 
   return (
-    <Box sx={{ position: "relative" }}>            
+    <Box sx={{ position: "relative" }}>
       <Box
         sx={{
           position: "absolute",
@@ -50,6 +51,7 @@ export const InputField = ({ name, label, onChange, error, helperText }) => {
         error={error}
         helperText={helperText}
         type={name === "password" ? (eyeOpen ? "text" : "password") : "text"}
+        // type={type}
         name={name}
         onChange={onChange}
         placeholder={label}
@@ -75,9 +77,9 @@ export const InputField = ({ name, label, onChange, error, helperText }) => {
             fontSize: "14px",
             lineHeight: "24px",
           },
-           "& .MuiFormHelperText-root":{
-            fontFamily:'Poppins'
-          }
+          "& .MuiFormHelperText-root": {
+            fontFamily: "Poppins",
+          },
         }}
       />
       {name === "password" ? (
