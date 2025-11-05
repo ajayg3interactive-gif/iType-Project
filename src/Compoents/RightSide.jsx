@@ -4,6 +4,7 @@ import itype4logo from "../assets/itype4home logo 1.svg";
 import { postRequestRegister } from "../Hooks/axiosRequests";
 import { InputField } from "./InputFields";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export default function RightSide() {
   const [formData, setFormData] = useState({
@@ -16,6 +17,8 @@ export default function RightSide() {
   });
 
   const [errors, setErrors] = useState({});
+
+  const navigate = useNavigate();
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -201,6 +204,7 @@ export default function RightSide() {
           Already have an account?{" "}
           <span
             style={{ color: "#922C88", fontWeight: "450", cursor: "pointer" }}
+            onClick={()=>navigate("/")}
           >
             Sign In
           </span>

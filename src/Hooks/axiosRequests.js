@@ -16,3 +16,12 @@ export async function postRequestRegister(URL, payload) {
     console.log("Error in postRequestRegister", err);
   }
 }
+
+export async function postRequestLogin(URL, payload) {
+  try {
+    const res = await axioxCient.post(URL, payload);
+    return res;
+  } catch (error) {
+    console.log("Error in postRequestLogin", err);
+  }
+}
