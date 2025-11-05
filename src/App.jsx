@@ -7,6 +7,7 @@ import LoginPage from "./Compoents/LoginPage";
 import { Toaster } from "react-hot-toast";
 import { Route, Routes } from "react-router-dom";
 import ChildLogin from "./Compoents/ChildLogin";
+import OtpVerifyPage from "./Compoents/OtpVerifyPage";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/" element={<LoginPage />} />
         <Route path="/signup" element={<RightSide />} />
         <Route path="/child-login" element={<ChildLogin />} />
+        <Route path="/otp-verify" element={<OtpVerifyPage/>}/>
       </Routes>
     </Box>
   );

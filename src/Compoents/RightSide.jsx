@@ -28,9 +28,7 @@ export default function RightSide() {
     }));
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
-
-  const handleRegister = async (e) => {
-    e.preventDefault();
+  const validationCheck = () => {
     const newErrors = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phnRegex = /^[0-9]{10}$/;
@@ -55,6 +53,11 @@ export default function RightSide() {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length > 0) return;
+  };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    validationCheck();
 
     try {
       const res = await postRequestRegister("/register", formData);
@@ -64,7 +67,7 @@ export default function RightSide() {
       }
     } catch (err) {
       console.log(err);
-      toast.error("Error",err);
+      toast.error("Error", err);
     }
     console.log(formData);
   };

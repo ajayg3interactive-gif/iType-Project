@@ -3,8 +3,7 @@ import React, { useState } from "react";
 import itype4logo from "../assets/itype4home logo 1.svg";
 import { InputField } from "./InputFields";
 import { useNavigate } from "react-router-dom";
-import axios from "./../../node_modules/axios/lib/axios";
-import { postRequestLogin } from "../Hooks/axiosRequests";
+import { postRequestRegister } from "../Hooks/axiosRequests";
 import toast from "react-hot-toast";
 
 export default function LoginPage() {
@@ -17,14 +16,14 @@ export default function LoginPage() {
 
   const [errors, setErrors] = useState({});
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  const validationCheck = () => {
     const newErrors = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     Object.entries(loginData).forEach(([key, value]) => {
       if (!value) newErrors[key] = "This field is required";
     });
+
     if (loginData.email && !emailRegex.test(loginData.email)) {
       newErrors.email = "Please enter a valid email address";
     }
@@ -32,12 +31,19 @@ export default function LoginPage() {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length > 0) return;
+  };
 
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    validationCheck();
     try {
-      const res = await postRequestLogin("/login", loginData);
+      const res = await postRequestRegister("/login", loginData);
       console.log(res);
       if (res.data) {
-        toast.success("Login success");
+        const data = res.data;
+        localStorage.setItem("user_id", data.user_id);
+        navigate("/otp-verify");
+        console.log(data.user_id)
       }
     } catch (err) {
       console.log("Login Error", err);

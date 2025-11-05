@@ -17,20 +17,20 @@ export async function postRequestRegister(URL, payload) {
   }
 }
 
-export async function postRequestLogin(URL, payload) {
-  try {
-    const res = await axiosCient.post(URL, payload);
-    return res;
-  } catch (err) {
-    console.log("Error in postRequestLogin", err);
-  }
-}
+// export async function postRequestLogin(URL, payload) {
+//   try {
+//     const res = await axiosCient.post(URL, payload);
+//     return res;
+//   } catch (err) {
+//     console.log("Error in postRequestLogin", err);
+//   }
+// }
 
-export async function postRequestChildLogin(URL, payload) {
-  try {
-    const res = await axiosCient.post(URL, payload);
-    return res;
-  } catch (err) {
-    console.log("Error in postRequestChildLogin", err);
-  }
-}
+// export async function postRequestChildLogin(URL, payload) {
+//   try {
+//     const res = await axiosCient.post(URL, payload);
+//     return res;
+//   } catch (err) {
+//     console.log("Error in postRequestChildLogin", err);
+//   }
+// }

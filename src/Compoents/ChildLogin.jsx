@@ -10,7 +10,7 @@ import React, { useState } from "react";
 import itype4logo from "../assets/itype4home logo 1.svg";
 import { InputField } from "./InputFields";
 import { useNavigate } from "react-router-dom";
-import { postRequestChildLogin } from "../Hooks/axiosRequests";
+import { postRequestRegister } from "../Hooks/axiosRequests";
 
 export default function ChildLogin() {
   const navigate = useNavigate();
@@ -29,8 +29,7 @@ export default function ChildLogin() {
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  const validationCheck = () => {
     const newErrors = {};
     Object.entries(childLoginData).forEach(([key, value]) => {
       if (!value) newErrors[key] = "This Field is required ";
@@ -38,9 +37,14 @@ export default function ChildLogin() {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length > 0) return;
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    validationCheck();
 
     try {
-      const res = await postRequestChildLogin("/student-login", childLoginData);
+      const res = await postRequestRegister("/student-login", childLoginData);
       console.log(res);
     } catch (err) {
       console.log(err);
