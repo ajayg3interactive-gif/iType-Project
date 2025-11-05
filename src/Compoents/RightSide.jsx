@@ -1,12 +1,16 @@
 import { Box, Button, Checkbox, Typography } from "@mui/material";
 import { useState } from "react";
 import itype4logo from "../assets/itype4home logo 1.svg";
+import { postRequestRegister } from "../Hooks/axiosRequests";
 import { InputField } from "./InputFields";
+import toast from "react-hot-toast";
 
 export default function RightSide() {
   const [formData, setFormData] = useState({
-    fullname: "",
-    phoneNumber: "",
+    first_name: "",
+    last_name: "",
+    phone: "",
+    postal_code: "",
     email: "",
     password: "",
   });
@@ -22,7 +26,7 @@ export default function RightSide() {
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     const newErrors = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -34,8 +38,11 @@ export default function RightSide() {
     if (formData.email && !emailRegex.test(formData.email)) {
       newErrors.email = "Please enter a valid email address";
     }
-    if (formData.phoneNumber && !phnRegex.test(formData.phoneNumber)) {
-      newErrors.phoneNumber = "Please enter a valid 10-digit phone number";
+    if (formData.phone && !phnRegex.test(formData.phone)) {
+      newErrors.phone = "Please enter a valid 10-digit phone number";
+    }
+    if (formData.postal_code && formData.postal_code < 6) {
+      newErrors.postal_code = "ZIP Code must be at least 6 Numbers";
     }
 
     if (formData.password && formData.password.length < 8) {
@@ -44,6 +51,14 @@ export default function RightSide() {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length > 0) return;
+    try {
+      const res = await postRequestRegister("/register", formData);
+      console.log("Registration success", res);
+      toast.success("Registration success");
+    } catch (err) {
+      console.log(err);
+      toast.error(err);
+    }
     console.log(formData);
   };
   return (
@@ -82,20 +97,34 @@ export default function RightSide() {
         </Box>
         <Box sx={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <InputField
-            name={"fullname"}
-            label={"Full Name"}
+            name={"first_name"}
+            label={"First Name"}
             onChange={handleOnChange}
-            error={!!errors.fullname}
-            helperText={errors.fullname}
+            error={!!errors.first_name}
+            helperText={errors.first_name}
           />
           <InputField
-            name={"phoneNumber"}
-            label={"Phone Number"}
+            name={"last_name"}
+            label={"Last Name"}
             onChange={handleOnChange}
-            error={!!errors.phoneNumber}
-            helperText={errors.phoneNumber}
+            error={!!errors.last_name}
+            helperText={errors.last_name}
           />
 
+          <InputField
+            name={"phone"}
+            label={"Phone Number"}
+            onChange={handleOnChange}
+            error={!!errors.phone}
+            helperText={errors.phone}
+          />
+          <InputField
+            name={"postal_code"}
+            label={"ZIP Code"}
+            onChange={handleOnChange}
+            error={!!errors.postal_code}
+            helperText={errors.postal_code}
+          />
           <InputField
             name={"email"}
             label={"Email Address"}

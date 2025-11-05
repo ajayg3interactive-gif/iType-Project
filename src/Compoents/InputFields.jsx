@@ -1,9 +1,5 @@
-import {
-  Box,
-  InputAdornment,
-  TextField,
-  useScrollTrigger,
-} from "@mui/material";
+import { Box, TextField } from "@mui/material";
+import { useState } from "react";
 import {
   EmailIcon,
   EyeClose,
@@ -11,18 +7,21 @@ import {
   LockIcon,
   PhoneIcon,
   UserIcon,
+  ZipCodeIcon,
 } from "./SvgIcons";
-import { caES } from "@mui/material/locale";
-import { useState } from "react";
 
 export const InputField = ({ name, label, onChange, error, helperText }) => {
   const [type, setType] = useState("");
   const getIcon = () => {
     switch (name) {
-      case "fullname":
+      case "first_name":
         return <UserIcon />;
-      case "phoneNumber":
+      case "last_name":
+        return <UserIcon />;
+      case "phone":
         return <PhoneIcon />;
+      case "postal_code":
+        return <ZipCodeIcon/>;
       case "email":
         return <EmailIcon />;
       case "password":
