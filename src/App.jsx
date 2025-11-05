@@ -6,6 +6,7 @@ import RightSide from "./Compoents/RightSide";
 import LoginPage from "./Compoents/LoginPage";
 import { Toaster } from "react-hot-toast";
 import { Route, Routes } from "react-router-dom";
+import ChildLogin from "./Compoents/ChildLogin";
 
 function App() {
   return (
@@ -17,8 +18,8 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/signup" element={<RightSide />} />
+        <Route path="/child-login" element={<ChildLogin />} />
       </Routes>
-
     </Box>
   );
 }

@@ -28,16 +28,22 @@ export default function LoginPage() {
     if (loginData.email && !emailRegex.test(loginData.email)) {
       newErrors.email = "Please enter a valid email address";
     }
+
     setErrors(newErrors);
+
+    if (Object.keys(newErrors).length > 0) return;
+
     try {
       const res = await postRequestLogin("/login", loginData);
       console.log(res);
-      toast.success("Login success");
+      if (res.data) {
+        toast.success("Login success");
+      }
     } catch (err) {
       console.log("Login Error", err);
       toast.error("Login Error", err);
     }
-    console.log(loginData);
+    // console.log(loginData);
   };
 
   const handleOnChange = (e) => {
@@ -152,21 +158,40 @@ export default function LoginPage() {
         <Typography
           sx={{
             fontFamily: "Poppins",
+            fontWeight: "400",
+            fontSize: "16px",
+            lineHeight: "24px",
+            color: "#09070580",
+          }}
+        >
+          Logging in as a child ?{" "}
+          <span
+            style={{ color: "#922C88", cursor: "pointer" }}
+            onClick={() => navigate("/child-login")}
+          >
+            Click Here
+          </span>
+        </Typography>
+        <Button
+          variant="outlined"
+          sx={{
+            fontFamily: "Poppins",
             fontWeight: 400,
             fontSize: "16px",
             lineHeight: "24px",
             textAlign: "center",
             color: "#09070580",
+            textTransform: "none",
+            borderColor: "#922C88",
+            borderRadius: "10px",
+            padding: "12px",
+            color: "#922C88",
+            cursor: "pointer",
           }}
+          onClick={() => navigate("/signup")}
         >
-          Don’t have an account yet?{" "}
-          <span
-            style={{ color: "#922C88", fontWeight: "450", cursor: "pointer" }}
-            onClick={() => navigate("/signup")}
-          >
-            Sign Up
-          </span>
-        </Typography>
+          Don’t have an account yet? Sign Up
+        </Button>
       </Box>
     </Box>
   );

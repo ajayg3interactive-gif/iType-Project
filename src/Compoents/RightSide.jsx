@@ -57,7 +57,9 @@ export default function RightSide() {
     try {
       const res = await postRequestRegister("/register", formData);
       console.log("Registration success", res);
-      toast.success("Registration success");
+      if (res.data) {
+        toast.success("Registration success");
+      }
     } catch (err) {
       console.log(err);
       toast.error(err);
@@ -191,7 +193,8 @@ export default function RightSide() {
         >
           Register
         </Button>
-        <Typography
+        <Button
+          variant="outlined"
           sx={{
             fontFamily: "Poppins",
             fontWeight: 400,
@@ -199,16 +202,17 @@ export default function RightSide() {
             lineHeight: "24px",
             textAlign: "center",
             color: "#09070580",
+            textTransform: "none",
+            borderColor: "#922C88",
+            borderRadius: "10px",
+            padding: "12px",
+            color: "#922C88",
+            cursor: "pointer",
           }}
+          onClick={() => navigate("/")}
         >
-          Already have an account?{" "}
-          <span
-            style={{ color: "#922C88", fontWeight: "450", cursor: "pointer" }}
-            onClick={()=>navigate("/")}
-          >
-            Sign In
-          </span>
-        </Typography>
+          Already have an account? Sign Up
+        </Button>
       </Box>
     </Box>
   );

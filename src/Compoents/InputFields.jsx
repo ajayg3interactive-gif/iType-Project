@@ -4,6 +4,7 @@ import {
   EmailIcon,
   EyeClose,
   EyeOpen,
+  KeyIcon,
   LockIcon,
   PhoneIcon,
   UserIcon,
@@ -15,13 +16,15 @@ export const InputField = ({ name, label, onChange, error, helperText }) => {
   const getIcon = () => {
     switch (name) {
       case "first_name":
-        return <UserIcon />;
+      case "user_name":
       case "last_name":
         return <UserIcon />;
+      case "unique_code":
+        return <KeyIcon />;
       case "phone":
         return <PhoneIcon />;
       case "postal_code":
-        return <ZipCodeIcon/>;
+        return <ZipCodeIcon />;
       case "email":
         return <EmailIcon />;
       case "password":
