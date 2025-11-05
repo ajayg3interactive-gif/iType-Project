@@ -51,9 +51,11 @@ export default function RightSide() {
     if (formData.password && formData.password.length < 8) {
       newErrors.password = "Password must be at least 8 characters long";
     }
+
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length > 0) return;
+
     try {
       const res = await postRequestRegister("/register", formData);
       console.log("Registration success", res);
@@ -62,7 +64,7 @@ export default function RightSide() {
       }
     } catch (err) {
       console.log(err);
-      toast.error(err);
+      toast.error("Error",err);
     }
     console.log(formData);
   };
@@ -201,7 +203,6 @@ export default function RightSide() {
             fontSize: "16px",
             lineHeight: "24px",
             textAlign: "center",
-            color: "#09070580",
             textTransform: "none",
             borderColor: "#922C88",
             borderRadius: "10px",

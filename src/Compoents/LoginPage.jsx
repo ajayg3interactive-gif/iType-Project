@@ -180,7 +180,6 @@ export default function LoginPage() {
             fontSize: "16px",
             lineHeight: "24px",
             textAlign: "center",
-            color: "#09070580",
             textTransform: "none",
             borderColor: "#922C88",
             borderRadius: "10px",
