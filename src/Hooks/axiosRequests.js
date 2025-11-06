@@ -14,6 +14,7 @@ export async function postRequestRegister(URL, payload) {
     return res;
   } catch (err) {
     console.log("Error in postRequestRegister", err);
+    return err;
   }
 }
 

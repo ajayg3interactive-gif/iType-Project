@@ -1,21 +1,16 @@
-import {
-  Box,
-  Button,
-  Checkbox,
-  FormLabel,
-  InputLabel,
-  Typography,
-} from "@mui/material";
-import React, { useState } from "react";
-import itype4logo from "../assets/itype4home logo 1.svg";
-import { InputField } from "./InputFields";
+import { Box, Button, Checkbox, FormLabel, Typography } from "@mui/material";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import itype4logo from "../assets/itype4home logo 1.svg";
 import { postRequestRegister } from "../Hooks/axiosRequests";
+import { InputField, RememberMe } from "./InputFields";
 import LeftSide from "./LeftSide";
+import { KeyIcon, LockIcon, UserIcon } from "./SvgIcons";
 
 export default function ChildLogin() {
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
+  const [checkBox, setCheckBox] = useState(false);
   const [childLoginData, setChildLoginData] = useState({
     unique_code: "",
     user_name: "",
@@ -37,12 +32,14 @@ export default function ChildLogin() {
     });
     setErrors(newErrors);
 
-    if (Object.keys(newErrors).length > 0) return;
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    validationCheck();
+    const validate = validationCheck();
+
+    if (!validate) return;
 
     try {
       const res = await postRequestRegister("/student-login", childLoginData);
@@ -135,6 +132,7 @@ export default function ChildLogin() {
                 onChange={handleOnChange}
                 error={!!errors.unique_code}
                 helperText={errors.unique_code}
+                icon={<KeyIcon />}
               />
             </Box>
             <Box>
@@ -147,6 +145,7 @@ export default function ChildLogin() {
                 onChange={handleOnChange}
                 error={!!errors.user_name}
                 helperText={errors.user_name}
+                icon={<UserIcon />}
               />
             </Box>
             <Box>
@@ -159,22 +158,13 @@ export default function ChildLogin() {
                 onChange={handleOnChange}
                 error={!!errors.password}
                 helperText={errors.password}
+                icon={<LockIcon />}
               />
             </Box>
           </Box>
           <Box sx={{ display: "flex", flexDirection: "column", gap: "12px" }}>
             <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Checkbox
-                sx={{
-                  color: "#922C88",
-                  "&.Mui-checked": {
-                    color: "#922C88",
-                  },
-                }}
-              />
-              <Typography sx={{ fontFamily: "Poppins" }}>
-                Remember me
-              </Typography>
+              <RememberMe onChange={() => setCheckBox(!checkBox)}/>
             </Box>
             <Button
               type="submit"

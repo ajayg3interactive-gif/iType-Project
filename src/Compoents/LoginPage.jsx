@@ -1,11 +1,12 @@
-import { Box, Button, Checkbox, Typography } from "@mui/material";
-import React, { useState } from "react";
-import itype4logo from "../assets/itype4home logo 1.svg";
-import { InputField } from "./InputFields";
+import { Box, Button, Typography } from "@mui/material";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { postRequestRegister } from "../Hooks/axiosRequests";
-import toast from "react-hot-toast";
+import itype4logo from "../assets/itype4home logo 1.svg";
+import { InputField, RememberMe } from "./InputFields";
 import LeftSide from "./LeftSide";
+import { EmailIcon, LockIcon } from "./SvgIcons";
 
 export default function LoginPage() {
   const [loginData, setLoginData] = useState({
@@ -41,11 +42,15 @@ export default function LoginPage() {
     if (!validate) return;
     try {
       const res = await postRequestRegister("/login", loginData);
-      console.log(res);
+
       if (res.status === 200) {
         navigate("/otp-verify", {
           state: { userData: res.data, rememberMe: checkBox },
         });
+      } else {
+        console.log(res.response.data.message);
+        const message = res.response.data.message;
+        toast.error(message);
       }
     } catch (err) {
       console.log("Login Error", err);
@@ -128,6 +133,7 @@ export default function LoginPage() {
               onChange={handleOnChange}
               error={!!errors.email}
               helperText={errors.email}
+              icon={<EmailIcon />}
             />
             <InputField
               name={"password"}
@@ -135,6 +141,7 @@ export default function LoginPage() {
               onChange={handleOnChange}
               error={!!errors.password}
               helperText={errors.password}
+              icon={<LockIcon />}
             />
             <Box
               sx={{
@@ -144,20 +151,15 @@ export default function LoginPage() {
               }}
             >
               <Box sx={{ display: "flex", alignItems: "center" }}>
-                <Checkbox
-                  sx={{
-                    color: "#922C88",
-                    "&.Mui-checked": {
-                      color: "#922C88",
-                    },
-                  }}
-                  onChange={() => setCheckBox(!checkBox)}
-                />
-                <Typography sx={{ fontFamily: "Poppins" }}>
-                  Remember me
-                </Typography>
+                <RememberMe onChange={() => setCheckBox(!checkBox)} />
               </Box>
-              <Typography sx={{ fontFamily: "Poppins", color: "#922C88", cursor:"pointer" }}>
+              <Typography
+                sx={{
+                  fontFamily: "Poppins",
+                  color: "#922C88",
+                  cursor: "pointer",
+                }}
+              >
                 Forgot Password
               </Typography>
             </Box>

@@ -122,7 +122,7 @@ export default function OtpVerifyPage() {
                     height: "38px",
                     width: "38px",
                     // padding:"10px",
-                    textAlign:"center",
+                    textAlign: "center",
                     border: "1px solid #88888880",
                     borderRadius: "8px",
                   }}
@@ -158,7 +158,7 @@ export default function OtpVerifyPage() {
                 textTransform: "none",
                 fontSize: { xs: "12px", md: "18px" },
               }}
-              onClick={handleVerifyOtp}
+              onClick={() => navigate("/dashboard")}
             >
               Resend verification code
             </Button>
@@ -173,7 +173,7 @@ export default function OtpVerifyPage() {
               padding: "12px",
               fontFamily: "Poppins",
               fontWeight: "600",
-               fontSize: {xs:"12px", md:"18px"},
+              fontSize: { xs: "12px", md: "18px" },
             }}
           >
             Verify and Login

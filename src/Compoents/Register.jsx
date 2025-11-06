@@ -1,13 +1,23 @@
 import { Box, Button, Checkbox, Typography } from "@mui/material";
 import { useState } from "react";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 import itype4logo from "../assets/itype4home logo 1.svg";
 import { postRequestRegister } from "../Hooks/axiosRequests";
 import { InputField } from "./InputFields";
-import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 import LeftSide from "./LeftSide";
+import {
+  EmailIcon,
+  LockIcon,
+  PhoneIcon,
+  UserIcon,
+  ZipCodeIcon,
+} from "./SvgIcons";
 
 export default function Register() {
+  // const [isChecked, setIsChecked] = useState(false);
+  const [checkboxError, setCheckboxError] = useState("");
+  const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -15,9 +25,8 @@ export default function Register() {
     postal_code: "",
     email: "",
     password: "",
+    checkbox: "",
   });
-
-  const [errors, setErrors] = useState({});
 
   const navigate = useNavigate();
 
@@ -29,6 +38,7 @@ export default function Register() {
     }));
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
+
   const validationCheck = () => {
     const newErrors = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -59,9 +69,12 @@ export default function Register() {
   const handleRegister = async (e) => {
     e.preventDefault();
     const validate = validationCheck();
-
+    if (!formData.checkbox) {
+      setCheckboxError("You must agree to the Terms & Conditions");
+      return;
+    }
+    if (!validate) return;
     try {
-      if (!validate) return;
       const res = await postRequestRegister("/register", formData);
       console.log("Registration success", res);
       if (res.data) {
@@ -127,6 +140,7 @@ export default function Register() {
               onChange={handleOnChange}
               error={!!errors.first_name}
               helperText={errors.first_name}
+              icon={<UserIcon />}
             />
             <InputField
               name={"last_name"}
@@ -134,6 +148,7 @@ export default function Register() {
               onChange={handleOnChange}
               error={!!errors.last_name}
               helperText={errors.last_name}
+              icon={<UserIcon />}
             />
 
             <InputField
@@ -142,6 +157,7 @@ export default function Register() {
               onChange={handleOnChange}
               error={!!errors.phone}
               helperText={errors.phone}
+              icon={<PhoneIcon />}
             />
             <InputField
               name={"postal_code"}
@@ -149,6 +165,7 @@ export default function Register() {
               onChange={handleOnChange}
               error={!!errors.postal_code}
               helperText={errors.postal_code}
+              icon={<ZipCodeIcon />}
             />
             <InputField
               name={"email"}
@@ -156,6 +173,7 @@ export default function Register() {
               onChange={handleOnChange}
               error={!!errors.email}
               helperText={errors.email}
+              icon={<EmailIcon />}
             />
 
             <InputField
@@ -164,6 +182,7 @@ export default function Register() {
               onChange={handleOnChange}
               error={!!errors.password}
               helperText={errors.password}
+              icon={<LockIcon />}
             />
             <Typography
               sx={{
@@ -177,27 +196,48 @@ export default function Register() {
             </Typography>
           </Box>
 
-          <Box sx={{ display: "flex" }}>
-            <Checkbox
-              defaultChecked
-              value=""
-              // checked={}
-              // onChange={}
-              sx={{
-                color: "#922C88",
-                "&.Mui-checked": {
+          <Box sx={{ display: "flex", flexDirection: "column" }}>
+            <Box sx={{ display: "flex" }}>
+              <Checkbox
+                checked={formData.checkbox}
+                onChange={(e) => {
+                  const checked = e.target.checked;
+                  setFormData((prev) => ({ ...prev, checkbox: checked }));
+                  if (checked) setCheckboxError("");
+                }}
+                sx={{
                   color: "#922C88",
-                },
-              }}
-            />
-            <Typography
-              sx={{ fontFamily: "Poppins", fontWeight: 400, fontSize: "13px" }}
-            >
-              By creating an account means you agree to the <br />{" "}
-              <span style={{ color: "#922C88" }}>Terms & Conditions</span> and
-              our <span style={{ color: "#922C88" }}>Privacy Policy</span>
-            </Typography>
+                  "&.Mui-checked": {
+                    color: "#922C88",
+                  },
+                }}
+              />
+              <Typography
+                sx={{
+                  fontFamily: "Poppins",
+                  fontWeight: 400,
+                  fontSize: "13px",
+                }}
+              >
+                By creating an account means you agree to the <br />{" "}
+                <span style={{ color: "#922C88" }}>Terms & Conditions</span> and
+                our <span style={{ color: "#922C88" }}>Privacy Policy</span>
+              </Typography>
+            </Box>
+            {checkboxError && (
+              <Typography
+                sx={{
+                  fontFamily: "Poppins",
+                  fontSize: "13px",
+                  color: "#d32f2f",
+                  m: "5px 40px",
+                }}
+              >
+                {checkboxError}
+              </Typography>
+            )}
           </Box>
+
           <Button
             type="submit"
             style={{

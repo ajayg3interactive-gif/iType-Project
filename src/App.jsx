@@ -1,10 +1,9 @@
-import { useState } from "react";
-import "./App.css";
 import { Box } from "@mui/material";
-import LoginPage from "./Compoents/LoginPage";
 import { Toaster } from "react-hot-toast";
 import { Route, Routes } from "react-router-dom";
+import "./App.css";
 import ChildLogin from "./Compoents/ChildLogin";
+import LoginPage from "./Compoents/LoginPage";
 import OtpVerifyPage from "./Compoents/OtpVerifyPage";
 import Dashboard from "./Compoents/Dashboard";
 import Register from "./Compoents/Register";

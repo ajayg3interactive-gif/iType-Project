@@ -1,36 +1,16 @@
-import { Box, TextField } from "@mui/material";
+import { Box, Checkbox, TextField, Typography } from "@mui/material";
 import { useState } from "react";
-import {
-  EmailIcon,
-  EyeClose,
-  EyeOpen,
-  KeyIcon,
-  LockIcon,
-  PhoneIcon,
-  UserIcon,
-  ZipCodeIcon,
-} from "./SvgIcons";
+import { EyeClose, EyeOpen } from "./SvgIcons";
+import { warnOnce } from "./../../node_modules/@mui/x-internals/esm/warning/warning";
 
-export const InputField = ({ name, label, onChange, error, helperText }) => {
-  const [type, setType] = useState("");
-  const getIcon = () => {
-    switch (name) {
-      case "first_name":
-      case "user_name":
-      case "last_name":
-        return <UserIcon />;
-      case "unique_code":
-        return <KeyIcon />;
-      case "phone":
-        return <PhoneIcon />;
-      case "postal_code":
-        return <ZipCodeIcon />;
-      case "email":
-        return <EmailIcon />;
-      case "password":
-        return <LockIcon />;
-    }
-  };
+export const InputField = ({
+  name,
+  label,
+  onChange,
+  error,
+  helperText,
+  icon,
+}) => {
   const [eyeOpen, setEyeOpen] = useState(false);
 
   return (
@@ -47,13 +27,12 @@ export const InputField = ({ name, label, onChange, error, helperText }) => {
           zIndex: 1,
         }}
       >
-        {getIcon()}
+        {icon}
       </Box>
       <TextField
         error={error}
         helperText={helperText}
         type={name === "password" ? (eyeOpen ? "text" : "password") : "text"}
-        // type={type}
         name={name}
         onChange={onChange}
         placeholder={label}
@@ -61,7 +40,7 @@ export const InputField = ({ name, label, onChange, error, helperText }) => {
         sx={{
           position: "relative",
           fontFamily: "Poppins",
-          mixWidth:'476px',
+          mixWidth: "476px",
           "& fieldset": {
             borderRadius: "10px",
           },
@@ -100,5 +79,22 @@ export const InputField = ({ name, label, onChange, error, helperText }) => {
         <></>
       )}
     </Box>
+  );
+};
+
+export const RememberMe = ({ onChange }) => {
+  return (
+    <>
+      <Checkbox
+        sx={{
+          color: "#922C88",
+          "&.Mui-checked": {
+            color: "#922C88",
+          },
+        }}
+        onChange={onChange}
+      />
+      <Typography sx={{ fontFamily: "Poppins" }}>Remember me</Typography>
+    </>
   );
 };
