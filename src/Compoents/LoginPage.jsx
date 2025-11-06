@@ -5,6 +5,7 @@ import { InputField } from "./InputFields";
 import { useNavigate } from "react-router-dom";
 import { postRequestRegister } from "../Hooks/axiosRequests";
 import toast from "react-hot-toast";
+import LeftSide from "./LeftSide";
 
 export default function LoginPage() {
   const [loginData, setLoginData] = useState({
@@ -15,6 +16,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   const [errors, setErrors] = useState({});
+  const [checkBox, setCheckBox] = useState(false);
 
   const validationCheck = () => {
     const newErrors = {};
@@ -30,20 +32,20 @@ export default function LoginPage() {
 
     setErrors(newErrors);
 
-    if (Object.keys(newErrors).length > 0) return;
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    validationCheck();
+    const validate = validationCheck();
+    if (!validate) return;
     try {
       const res = await postRequestRegister("/login", loginData);
       console.log(res);
-      if (res.data) {
-        const data = res.data;
-        localStorage.setItem("user_id", data.user_id);
-        navigate("/otp-verify");
-        console.log(data.user_id)
+      if (res.status === 200) {
+        navigate("/otp-verify", {
+          state: { userData: res.data, rememberMe: checkBox },
+        });
       }
     } catch (err) {
       console.log("Login Error", err);
@@ -64,139 +66,154 @@ export default function LoginPage() {
   return (
     <Box
       sx={{
-        // height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
+        display: "grid",
+        gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+        height: "100vh",
       }}
     >
+      <LeftSide />
       <Box
-        component={"form"}
-        onSubmit={handleLogin}
-        sx={{ display: "flex", flexDirection: "column", gap: "32px" }}
+        sx={{
+          // height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          m: { xs: "20px 20px ", md: "0px" },
+        }}
       >
         <Box
+          component={"form"}
+          onSubmit={handleLogin}
           sx={{
-            backgroundImage: `url(${itype4logo})`,
-            backgroundRepeat: "no-repeat",
-            width: "131px",
-            height: "32px",
+            display: "flex",
+            flexDirection: "column",
+            gap: { xs: "14px", md: "32px" },
           }}
-        />
-        <Box>
+        >
+          <Box
+            sx={{
+              backgroundImage: `url(${itype4logo})`,
+              backgroundRepeat: "no-repeat",
+              // width: "131px",
+              height: "32px",
+            }}
+          />
+          <Box>
+            <Typography
+              sx={{
+                fontFamily: "Poppins",
+                fontWeight: 600,
+                fontSize: "32px",
+                lineHeight: "44px",
+              }}
+            >
+              Sign In to Your Account
+            </Typography>
+            <Typography
+              sx={{
+                color: "#09070580",
+                fontFamily: "Poppins",
+                fontWeight: 400,
+                fontSize: "16px",
+                lineHeight: "28px",
+              }}
+            >
+              Welcome back! please enter your detail{" "}
+            </Typography>
+          </Box>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+            <InputField
+              name={"email"}
+              label={"Email"}
+              onChange={handleOnChange}
+              error={!!errors.email}
+              helperText={errors.email}
+            />
+            <InputField
+              name={"password"}
+              label={"Password"}
+              onChange={handleOnChange}
+              error={!!errors.password}
+              helperText={errors.password}
+            />
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Checkbox
+                  sx={{
+                    color: "#922C88",
+                    "&.Mui-checked": {
+                      color: "#922C88",
+                    },
+                  }}
+                  onChange={() => setCheckBox(!checkBox)}
+                />
+                <Typography sx={{ fontFamily: "Poppins" }}>
+                  Remember me
+                </Typography>
+              </Box>
+              <Typography sx={{ fontFamily: "Poppins", color: "#922C88", cursor:"pointer" }}>
+                Forgot Password
+              </Typography>
+            </Box>
+          </Box>
+          <Button
+            type="submit"
+            style={{
+              color: "#fff",
+              backgroundColor: "#922C88",
+              textTransform: "none",
+              borderRadius: "10px",
+              padding: "12px",
+              fontFamily: "Poppins",
+              fontWeight: "600",
+              fontSize: "16px",
+            }}
+          >
+            Login
+          </Button>
           <Typography
             sx={{
               fontFamily: "Poppins",
-              fontWeight: 600,
-              fontSize: "32px",
-              lineHeight: "44px",
+              fontWeight: "400",
+              fontSize: "16px",
+              lineHeight: "24px",
+              color: "#09070580",
             }}
           >
-            Sign In to Your Account
+            Logging in as a child ?{" "}
+            <span
+              style={{ color: "#922C88", cursor: "pointer" }}
+              onClick={() => navigate("/child-login")}
+            >
+              Click Here
+            </span>
           </Typography>
-          <Typography
+          <Button
+            variant="outlined"
             sx={{
-              color: "#09070580",
               fontFamily: "Poppins",
               fontWeight: 400,
               fontSize: "16px",
-              lineHeight: "28px",
+              lineHeight: "24px",
+              textAlign: "center",
+              textTransform: "none",
+              borderColor: "#922C88",
+              borderRadius: "10px",
+              padding: "12px",
+              color: "#922C88",
+              cursor: "pointer",
             }}
+            onClick={() => navigate("/signup")}
           >
-            Welcome back! please enter your detail{" "}
-          </Typography>
+            Don’t have an account yet? Sign Up
+          </Button>
         </Box>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-          <InputField
-            name={"email"}
-            label={"Email"}
-            onChange={handleOnChange}
-            error={!!errors.email}
-            helperText={errors.email}
-          />
-          <InputField
-            name={"password"}
-            label={"Password"}
-            onChange={handleOnChange}
-            error={!!errors.password}
-            helperText={errors.password}
-          />
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Checkbox
-                sx={{
-                  color: "#922C88",
-                  "&.Mui-checked": {
-                    color: "#922C88",
-                  },
-                }}
-              />
-              <Typography sx={{ fontFamily: "Poppins" }}>
-                Remember me
-              </Typography>
-            </Box>
-            <Typography sx={{ fontFamily: "Poppins", color: "#922C88" }}>
-              Forgot Password
-            </Typography>
-          </Box>
-        </Box>
-        <Button
-          type="submit"
-          style={{
-            color: "#fff",
-            backgroundColor: "#922C88",
-            textTransform: "none",
-            borderRadius: "10px",
-            padding: "12px",
-            fontFamily: "Poppins",
-            fontWeight: "600",
-            fontSize: "16px",
-          }}
-        >
-          Login
-        </Button>
-        <Typography
-          sx={{
-            fontFamily: "Poppins",
-            fontWeight: "400",
-            fontSize: "16px",
-            lineHeight: "24px",
-            color: "#09070580",
-          }}
-        >
-          Logging in as a child ?{" "}
-          <span
-            style={{ color: "#922C88", cursor: "pointer" }}
-            onClick={() => navigate("/child-login")}
-          >
-            Click Here
-          </span>
-        </Typography>
-        <Button
-          variant="outlined"
-          sx={{
-            fontFamily: "Poppins",
-            fontWeight: 400,
-            fontSize: "16px",
-            lineHeight: "24px",
-            textAlign: "center",
-            textTransform: "none",
-            borderColor: "#922C88",
-            borderRadius: "10px",
-            padding: "12px",
-            color: "#922C88",
-            cursor: "pointer",
-          }}
-          onClick={() => navigate("/signup")}
-        >
-          Don’t have an account yet? Sign Up
-        </Button>
       </Box>
     </Box>
   );

@@ -1,48 +1,56 @@
 import { Box, Button, Dialog, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import OtpInput from "react-otp-input";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { postRequestRegister } from "../Hooks/axiosRequests";
 
 export default function OtpVerifyPage() {
   const [open, setOpen] = useState(true);
   const [otp, setOtp] = useState("");
   const navigate = useNavigate();
-  const user_id = localStorage.getItem("user_id");
+  const location = useLocation();
+  const { userData, rememberMe } = location.state || {};
   const [ipAddress, setIpAddress] = useState("");
-  const [payload, setPayload] = useState({
-    id: user_id,
-    otp: "",
-    ip_address: ipAddress,
-  });
-  const handleVerifyOtp = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await postRequestRegister("/verify-otp", payload);
-      console.log(res);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  const handleOtp = (value) => {
-    setOtp(value);
-    setPayload((prev) => ({
-      ...prev,
-      otp: value,
-    }));
-  };
+
   useEffect(() => {
     const getIpAddress = async () => {
       try {
         const response = await fetch("https://geolocation-db.com/json/");
+        // console.log(response);
         const data = await response.json();
-        setIpAddress(data.ip);
+        // console.log(data.IPv4);
+        setIpAddress(data.IPv4);
+        // console.log(ipAddress);
       } catch (error) {
         console.error("Error fetching IP:", error);
       }
     };
     getIpAddress();
   }, []);
+
+  const handleVerifyOtp = async (e) => {
+    e.preventDefault();
+    const payload = {
+      id: userData.id,
+      otp: otp,
+      ip_address: ipAddress,
+    };
+    try {
+      const res = await postRequestRegister("/verify-otp", payload);
+      console.log(res);
+      if (res.status === 200 && res.data?.success) {
+        if (rememberMe) {
+          localStorage.setItem("userData", userData);
+        } else {
+          sessionStorage.setItem("userData", userData);
+        }
+        navigate("/dashboard");
+      }
+    } catch (err) {
+      navigate("/dashboard");
+      console.log(err);
+    }
+  };
 
   return (
     <Box>
@@ -84,15 +92,16 @@ export default function OtpVerifyPage() {
               Email two factor authentication
             </Typography>
             <Typography sx={{ fontSize: "15px" }}>
-              Your verification code has been sent to (given email). Please
-              enter it below to login to the dashboard
+              Your verification code has been sent to{" "}
+              <span style={{ color: "#53a9feff" }}>{userData.email}</span>.
+              Please enter it below to login to the dashboard
             </Typography>
           </Box>
           <Box sx={{ m: "25px" }}>
             <OtpInput
               //   name="otp"
               value={otp}
-              onChange={handleOtp}
+              onChange={setOtp}
               numInputs={6}
               renderSeparator={
                 <span style={{ padding: "10px", margin: "10px" }}>-</span>
@@ -133,6 +142,7 @@ export default function OtpVerifyPage() {
                 textTransform: "none",
                 fontSize: "18px",
               }}
+              onClick={handleVerifyOtp}
             >
               Resend verification code
             </Button>

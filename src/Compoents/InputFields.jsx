@@ -57,11 +57,11 @@ export const InputField = ({ name, label, onChange, error, helperText }) => {
         name={name}
         onChange={onChange}
         placeholder={label}
+        fullWidth
         sx={{
-          width: "476px",
-
           position: "relative",
           fontFamily: "Poppins",
+          mixWidth:'476px',
           "& fieldset": {
             borderRadius: "10px",
           },

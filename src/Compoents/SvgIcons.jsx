@@ -86,10 +86,10 @@ export const EyeOpen = () => (
     viewBox="0 0 24 24"
     fill="none"
     stroke="#09070580"
-    stroke-width="2"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-    class="lucide lucide-eye-icon lucide-eye"
+    strokeWidth="2"
+    strokeLinecap="round"
+     strokeLinejoin="round"
+    className="lucide lucide-eye-icon lucide-eye"
   >
     <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
     <circle cx="12" cy="12" r="3" />
@@ -104,10 +104,10 @@ export const ZipCodeIcon = () => (
     viewBox="0 0 24 24"
     fill="none"
     stroke="#09070580"
-    stroke-width="2"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-    class="lucide lucide-landmark-icon lucide-landmark"
+    strokeWidth="2"
+    strokeLinecap="round"
+     strokeLinejoin="round"
+    className="lucide lucide-landmark-icon lucide-landmark"
   >
     <path d="M10 18v-7" />
     <path d="M11.12 2.198a2 2 0 0 1 1.76.006l7.866 3.847c.476.233.31.949-.22.949H3.474c-.53 0-.695-.716-.22-.949z" />
@@ -126,10 +126,10 @@ export const KeyIcon = () => (
     viewBox="0 0 24 24"
     fill="none"
     stroke="#09070580"
-    stroke-width="2"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-    class="lucide lucide-key-round-icon lucide-key-round"
+    strokeWidth="2"
+    strokeLinecap="round"
+     strokeLinejoin="round"
+    className="lucide lucide-key-round-icon lucide-key-round"
   >
     <path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z" />
     <circle cx="16.5" cy="7.5" r=".5" fill="currentColor" />
