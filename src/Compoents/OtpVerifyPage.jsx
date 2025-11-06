@@ -47,7 +47,6 @@ export default function OtpVerifyPage() {
         navigate("/dashboard");
       }
     } catch (err) {
-      navigate("/dashboard");
       console.log(err);
     }
   };
@@ -86,6 +85,7 @@ export default function OtpVerifyPage() {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
+              textAlign: "center",
             }}
           >
             <Typography sx={{ fontWeight: "700", fontSize: "28px" }}>
@@ -97,31 +97,46 @@ export default function OtpVerifyPage() {
               Please enter it below to login to the dashboard
             </Typography>
           </Box>
-          <Box sx={{ m: "25px" }}>
+          <Box sx={{ m: { xs: "10px", md: "25px" } }}>
             <OtpInput
               //   name="otp"
               value={otp}
               onChange={setOtp}
               numInputs={6}
               renderSeparator={
-                <span style={{ padding: "10px", margin: "10px" }}>-</span>
+                <Box
+                  component={"span"}
+                  sx={{
+                    padding: { xs: "1px", sm: "5px", md: "10px" },
+                    margin: { xs: "1px", sm: "5px", lg: "10px" },
+                  }}
+                >
+                  -
+                </Box>
               }
-              renderInput={(props) => <input {...props} />}
-              inputStyle={{
-                height: "55px",
-                width: "55px",
-                // padding:"10px",
-                border: "1px solid #88888880",
-                borderRadius: "8px",
-              }}
+              renderInput={(props) => (
+                <Box
+                  component={"input"}
+                  {...props}
+                  style={{
+                    height: "38px",
+                    width: "38px",
+                    // padding:"10px",
+                    border: "1px solid #88888880",
+                    borderRadius: "8px",
+                  }}
+                />
+              )}
             />
           </Box>
           <Box
             sx={{
               display: "flex",
               justifyContent: "space-between",
-              m: "25px",
-              gap: "400px",
+              p: { xs: "3px", md: "25px" },
+              maxWidth: "908px",
+              width: "100%",
+              // gap: "400px",
             }}
           >
             <Button
@@ -129,7 +144,7 @@ export default function OtpVerifyPage() {
                 color: "orange",
                 cursor: "pointer",
                 textTransform: "none",
-                fontSize: "18px",
+                fontSize: { xs: "12px", md: "18px" },
               }}
               onClick={() => navigate("/")}
             >
@@ -140,7 +155,7 @@ export default function OtpVerifyPage() {
                 color: "green",
                 cursor: "pointer",
                 textTransform: "none",
-                fontSize: "18px",
+                fontSize: { xs: "12px", md: "18px" },
               }}
               onClick={handleVerifyOtp}
             >
@@ -157,7 +172,7 @@ export default function OtpVerifyPage() {
               padding: "12px",
               fontFamily: "Poppins",
               fontWeight: "600",
-              fontSize: "16px",
+               fontSize: {xs:"12px", md:"18px"},
             }}
           >
             Verify and Login
