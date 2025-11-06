@@ -122,6 +122,7 @@ export default function OtpVerifyPage() {
                     height: "38px",
                     width: "38px",
                     // padding:"10px",
+                    textAlign:"center",
                     border: "1px solid #88888880",
                     borderRadius: "8px",
                   }}
