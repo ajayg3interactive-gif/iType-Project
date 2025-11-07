@@ -17,7 +17,7 @@ function App() {
         <Route path="/signup" element={<Register />} />
         <Route path="/child-login" element={<ChildLogin />} />
         <Route path="/otp-verify" element={<OtpVerifyPage />} />
-        <Route path="/dashboard" element={<Dashboard />}></Route>
+        <Route path="/dashboard" element={<Dashboard/>}></Route>
       </Routes>
     </Box>
   );

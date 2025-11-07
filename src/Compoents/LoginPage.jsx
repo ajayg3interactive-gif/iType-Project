@@ -14,6 +14,8 @@ export default function LoginPage() {
     password: "",
   });
 
+  // const userData = JSON.parse(localStorage.getItem("userData"));
+
   const navigate = useNavigate();
 
   const [errors, setErrors] = useState({});
@@ -42,6 +44,7 @@ export default function LoginPage() {
     if (!validate) return;
     try {
       const res = await postRequestRegister("/login", loginData);
+      console.log(res.data);
 
       if (res.status === 200) {
         navigate("/otp-verify", {

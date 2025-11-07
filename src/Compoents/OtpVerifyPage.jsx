@@ -30,19 +30,20 @@ export default function OtpVerifyPage() {
 
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
+
     const payload = {
-      id: userData.id,
+      id: userData.id || userData.id,
       otp: otp,
       ip_address: ipAddress,
     };
     try {
       const res = await postRequestRegister("/verify-otp", payload);
       console.log(res);
-      if (res.status === 200 && res.data?.success) {
+      if (res.status === 200) {
         if (rememberMe) {
-          localStorage.setItem("userData", userData);
+          localStorage.setItem("userData", JSON.stringify(userData));
         } else {
-          sessionStorage.setItem("userData", userData);
+          sessionStorage.setItem("userData", JSON.stringify(userData));
         }
         navigate("/dashboard");
       }
