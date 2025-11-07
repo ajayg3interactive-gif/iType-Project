@@ -1,9 +1,8 @@
 import { Box, Button, Checkbox, FormLabel, Typography } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import itype4logo from "../assets/itype4home logo 1.svg";
 import { postRequestRegister } from "../Hooks/axiosRequests";
-import { InputField, RememberMe } from "./InputFields";
+import { InputField, ItypeImg, RememberMe } from "./InputFields";
 import LeftSide from "./LeftSide";
 import { KeyIcon, LockIcon, UserIcon } from "./SvgIcons";
 
@@ -76,14 +75,7 @@ export default function ChildLogin() {
             gap: { xs: "14px", md: "32px" },
           }}
         >
-          <Box
-            sx={{
-              backgroundImage: `url(${itype4logo})`,
-              backgroundRepeat: "no-repeat",
-              width: "131px",
-              height: "32px",
-            }}
-          />
+          <ItypeImg />
           <Box>
             <Typography
               sx={{
@@ -164,7 +156,7 @@ export default function ChildLogin() {
           </Box>
           <Box sx={{ display: "flex", flexDirection: "column", gap: "12px" }}>
             <Box sx={{ display: "flex", alignItems: "center" }}>
-              <RememberMe onChange={() => setCheckBox(!checkBox)}/>
+              <RememberMe onChange={() => setCheckBox(!checkBox)} />
             </Box>
             <Button
               type="submit"
@@ -187,6 +179,7 @@ export default function ChildLogin() {
                 color: "#922C88",
                 cursor: "pointer",
               }}
+              onClick={() => navigate("/forgotPassword")}
             >
               Forgot Password
             </Typography>

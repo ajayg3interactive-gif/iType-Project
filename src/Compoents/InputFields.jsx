@@ -1,8 +1,7 @@
 import { Box, Checkbox, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { EyeClose, EyeOpen } from "./SvgIcons";
-import { warnOnce } from "./../../node_modules/@mui/x-internals/esm/warning/warning";
-
+import itype4logo from "../assets/itype4home logo 1.svg";
 export const InputField = ({
   name,
   label,
@@ -96,5 +95,18 @@ export const RememberMe = ({ onChange }) => {
       />
       <Typography sx={{ fontFamily: "Poppins" }}>Remember me</Typography>
     </>
+  );
+};
+
+export const ItypeImg = () => {
+  return (
+    <Box
+      sx={{
+        backgroundImage: `url(${itype4logo})`,
+        backgroundRepeat: "no-repeat",
+        width: "131px",
+        height: "32px",
+      }}
+    />
   );
 };

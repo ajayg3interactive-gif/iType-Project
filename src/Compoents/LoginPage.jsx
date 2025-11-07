@@ -3,8 +3,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { postRequestRegister } from "../Hooks/axiosRequests";
-import itype4logo from "../assets/itype4home logo 1.svg";
-import { InputField, RememberMe } from "./InputFields";
+import { InputField, ItypeImg, RememberMe } from "./InputFields";
 import LeftSide from "./LeftSide";
 import { EmailIcon, LockIcon } from "./SvgIcons";
 
@@ -98,14 +97,7 @@ export default function LoginPage() {
             gap: { xs: "14px", md: "32px" },
           }}
         >
-          <Box
-            sx={{
-              backgroundImage: `url(${itype4logo})`,
-              backgroundRepeat: "no-repeat",
-              // width: "131px",
-              height: "32px",
-            }}
-          />
+          <ItypeImg />
           <Box>
             <Typography
               sx={{
@@ -162,6 +154,7 @@ export default function LoginPage() {
                   color: "#922C88",
                   cursor: "pointer",
                 }}
+                onClick={() => navigate("/forgotPassword")}
               >
                 Forgot Password
               </Typography>
