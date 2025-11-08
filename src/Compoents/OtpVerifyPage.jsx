@@ -32,7 +32,7 @@ export default function OtpVerifyPage() {
     e.preventDefault();
 
     const payload = {
-      id: userData.id || userData.id,
+      id: userData.id || userData.user_id,
       otp: otp,
       ip_address: ipAddress,
     };

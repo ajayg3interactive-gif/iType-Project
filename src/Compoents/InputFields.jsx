@@ -2,6 +2,8 @@ import { Box, Checkbox, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { EyeClose, EyeOpen } from "./SvgIcons";
 import itype4logo from "../assets/itype4home logo 1.svg";
+
+
 export const InputField = ({
   name,
   label,
@@ -98,14 +100,14 @@ export const RememberMe = ({ onChange }) => {
   );
 };
 
-export const ItypeImg = () => {
+export const ItypeImg = ({ width, height }) => {
   return (
     <Box
       sx={{
         backgroundImage: `url(${itype4logo})`,
         backgroundRepeat: "no-repeat",
-        width: "131px",
-        height: "32px",
+        width: `${width || "132px"}`,
+        height: `${height || "32px"}`,
       }}
     />
   );
