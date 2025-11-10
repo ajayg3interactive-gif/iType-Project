@@ -71,7 +71,18 @@ export default function CenterLayout() {
         <Box sx={{ bgcolor: "#fff", height: "376px", borderRadius: "24px" }}>
           <CircularProgressbar />
         </Box>
-        <Box sx={{ bgcolor: "#fff", height: "376px", borderRadius: "24px" }}>
+        <Box
+          sx={{
+            bgcolor: "#fff",
+            height: "376px",
+            borderRadius: "24px",
+            overflow: "auto",
+             "&::-webkit-scrollbar": {
+            // here i make the scrollbar hidden -------------------------------------------------------
+            display: "none",
+          },
+          }}
+        >
           <ProgressLayout />
         </Box>
       </Box>

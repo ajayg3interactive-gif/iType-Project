@@ -86,25 +86,28 @@ export const UserLog = () => {
 };
 
 export const MenuIcons = () => {
+  const [activeIndex, setActiveIndex] = useState(0);
   const menuList = [
     {
-      icon: <HomeIcon />,
+      icon: (isActive) => <HomeIcon fill={isActive ? "#fff" : "#828392"} />,
       name: "Homepage",
     },
     {
-      icon: <SpeedIcon fill={"#828392"} />,
+      icon: (isActive) => <SpeedIcon fill={isActive ? "#fff" : "#828392"} />,
       name: "Speed and Accuracy",
     },
     {
-      icon: <BookIcon fill={"#828392"} />,
+      icon: (isActive) => <BookIcon fill={isActive ? "#fff" : "#828392"} />,
       name: "User Guide",
     },
     {
-      icon: <AccountingIcon />,
+      icon: (isActive) => (
+        <AccountingIcon fill={isActive ? "#fff" : "#828392"} />
+      ),
       name: "Accounting",
     },
     {
-      icon: <Settings />,
+      icon: (isActive) => <Settings fill={isActive ? "#fff" : "#828392"} />,
       name: "Settings",
     },
   ];
@@ -118,32 +121,39 @@ export const MenuIcons = () => {
         marginTop: "24px",
       }}
     >
-      {menuList.map((item, index) => (
-        <Box
-          key={index}
-          sx={{
-            display: "flex",
-            bgcolor: index === 0 ? "#922C88" : "#fff",
-            gap: "12px",
-            padding: "10px 12px",
-            border: "1px",
-            borderRadius: "12px",
-            color: index === 0 ? "#fff" : "#828392",
-            // width: "218px",
-          }}
-        >
-          {item.icon}
-          <Typography
+      {menuList.map((item, index) => {
+        const isActive = index === activeIndex;
+        return (
+          <Button
+            key={index}
+            onClick={() => setActiveIndex(index)}
             sx={{
-              fontFamily: "Urbanist",
-              fontWeight: "700",
-              fontSize: "14px",
+              display: "flex",
+              justifyContent: "start",
+              gap: "12px",
+              padding: "10px 12px",
+              border: "1px",
+              borderRadius: "12px",
+              cursor: "pointer",
+              transition: "all 0.2s ease",
+              color: isActive ? "#fff" : "#828392",
+              bgcolor: isActive ? "#922C88" : "#fff",
+              textTransform:"none",
             }}
           >
-            {item.name}
-          </Typography>
-        </Box>
-      ))}
+            {item.icon(isActive)}
+            <Typography
+              sx={{
+                fontFamily: "Urbanist",
+                fontWeight: "700",
+                fontSize: "14px",
+              }}
+            >
+              {item.name}
+            </Typography>
+          </Button>
+        );
+      })}
     </Box>
   );
 };

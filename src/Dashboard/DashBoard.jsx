@@ -22,7 +22,7 @@ export default function DashBoard() {
           p: "22px",
           m: "8px",
           overflow: "auto",
-          scrollbarWidth: "0px",
+          // scrollbarWidth: "0px",
           "&::-webkit-scrollbar": {
             // here i make the scrollbar hidden -------------------------------------------------------
             display: "none",
