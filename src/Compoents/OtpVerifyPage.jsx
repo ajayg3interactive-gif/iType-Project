@@ -39,11 +39,12 @@ export default function OtpVerifyPage() {
     try {
       const res = await postRequestRegister("/verify-otp", payload);
       console.log(res);
+      // localStorage.setItem("userData", JSON.stringify(res));
       if (res.status === 200) {
         if (rememberMe) {
-          localStorage.setItem("userData", JSON.stringify(userData));
+          localStorage.setItem("userData", JSON.stringify(res));
         } else {
-          sessionStorage.setItem("userData", JSON.stringify(userData));
+          sessionStorage.setItem("userData", JSON.stringify(res));
         }
         navigate("/dashboard");
       }

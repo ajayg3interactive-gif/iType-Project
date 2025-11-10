@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getCurrentUser } from "./HelperFunctions";
 
 const baseURL = "http://52.62.65.5/api";
 const axiosCient = axios.create({
@@ -7,6 +8,20 @@ const axiosCient = axios.create({
     Accept: "application/json",
   },
 });
+
+axiosCient.interceptors.request.use(
+  (config) => {
+    const currentUser = getCurrentUser();
+    if (currentUser && currentUser.access_token) {
+      config.headers.Authorization = `Bearer ${currentUser.access_token}`;
+    }
+    return config;
+  },
+
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 export async function postRequestRegister(URL, payload) {
   try {
@@ -18,20 +33,11 @@ export async function postRequestRegister(URL, payload) {
   }
 }
 
-// export async function postRequestLogin(URL, payload) {
-//   try {
-//     const res = await axiosCient.post(URL, payload);
-//     return res;
-//   } catch (err) {
-//     console.log("Error in postRequestLogin", err);
-//   }
-// }
-
-// export async function postRequestChildLogin(URL, payload) {
-//   try {
-//     const res = await axiosCient.post(URL, payload);
-//     return res;
-//   } catch (err) {
-//     console.log("Error in postRequestChildLogin", err);
-//   }
-// }
+export async function getRequest(URL, params = {},) {
+  try {
+    const res = await axiosCient.get(URL,{params});
+    return res;
+  } catch (err) {
+    console.log("Error in get method", err);
+  }
+}

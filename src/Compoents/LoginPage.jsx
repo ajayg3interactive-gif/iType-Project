@@ -44,7 +44,7 @@ export default function LoginPage() {
     try {
       const res = await postRequestRegister("/login", loginData);
       console.log(res.data);
-
+      localStorage.setItem("userData", JSON.stringify(res.data));
       if (res.status === 200) {
         navigate("/otp-verify", {
           state: { userData: res.data, rememberMe: checkBox },

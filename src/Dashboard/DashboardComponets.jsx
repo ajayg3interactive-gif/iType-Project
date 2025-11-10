@@ -23,8 +23,13 @@ import {
 import defaultAvatar from "../assets/Frame 2.png";
 import giftBG from "../assets/GiftBg.png";
 import dp from "../assets/image 3.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dayjs from "dayjs";
+import { getRequest } from "../Hooks/axiosRequests";
+import { getCurrentUser } from "../Hooks/HelperFunctions";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchStudent } from "../Store/studentSlice";
+import { setSelectedChild } from "../Store/selectedChildSlice";
 
 export const UserLog = () => {
   const currentUser = JSON.parse(localStorage.getItem("userData"));
@@ -138,7 +143,7 @@ export const MenuIcons = () => {
               transition: "all 0.2s ease",
               color: isActive ? "#fff" : "#828392",
               bgcolor: isActive ? "#922C88" : "#fff",
-              textTransform:"none",
+              textTransform: "none",
             }}
           >
             {item.icon(isActive)}
@@ -240,6 +245,20 @@ export const ClamePrize = () => {
 };
 
 export const CircularProgressbar = () => {
+  const childId = useSelector((state) => state.selectedChild.childId);
+  const [taskCount, setTaskCount] = useState([]);
+
+  const selectedID = async () => {
+    const res = await getRequest(`get-tasks-count/${childId}`);
+    setTaskCount(res.data.data);
+    console.log(res.data);
+  };
+  useEffect(() => {
+    if (childId) {
+      selectedID();
+    }
+  }, [childId]);
+
   return (
     <Box
       sx={{
@@ -273,7 +292,7 @@ export const CircularProgressbar = () => {
               textAlign: "center",
             }}
           >
-            73
+            {taskCount?.completed_count}
             <Typography
               sx={{
                 fontFamily: "Urbanist",
@@ -282,7 +301,7 @@ export const CircularProgressbar = () => {
                 color: "#828392",
               }}
             >
-              /100 <br /> completed
+              /{taskCount.total_count || 0 } <br /> completed
             </Typography>
           </span>
         </CircularProgressbarWithChildren>
@@ -305,6 +324,23 @@ export const CircularProgressbar = () => {
 };
 
 export const ProgressLayout = () => {
+  const childId = useSelector((state) => state.selectedChild.childId);
+  const [drils, setDrils] = useState([]);
+
+  const selectedID = async () => {
+    // console.log(childId);
+
+    const res = await getRequest(`/parent/drill-score/${childId}`);
+    // console.log(res);
+    setDrils(res.data.data);
+  };
+
+  useEffect(() => {
+    if (childId) {
+      selectedID();
+    }
+  }, [childId]);
+
   const listOfProgress = [
     {
       icon: <SpeedIcon fill={"#fff"} />,
@@ -312,23 +348,23 @@ export const ProgressLayout = () => {
       border: "#c6f1ffff",
       head: "Speed Drills",
       subHead: "Measuring your learning outcome.",
-      value: 16,
+      value: drils?.speedAccDrillCount || 0,
     },
-    {
-      icon: <AccuracyIcon />,
-      bgcolor: "#E52293",
-      border: "#ffa2d8ff",
-      head: "Accuracy Drills",
-      subHead: "Measuring your learning outcome.",
-      value: 31,
-    },
+    // {
+    //   icon: <AccuracyIcon />,
+    //   bgcolor: "#E52293",
+    //   border: "#ffa2d8ff",
+    //   head: "Accuracy Drills",
+    //   subHead: "Measuring your learning outcome.",
+    //   // value:,
+    // },
     {
       icon: <TextIcon />,
       bgcolor: "#FF6928",
       border: "#ffb18fff",
       head: "Text Drills",
       subHead: "Practice improves your touch typing.",
-      value: 54,
+      value: drils?.textDrillCount || 0,
     },
     {
       icon: <GameIcon />,
@@ -336,7 +372,7 @@ export const ProgressLayout = () => {
       border: "#e3ffb5ff",
       head: "Games",
       subHead: "Learning and having fun at the same time.",
-      value: 75,
+      value: drils?.gameDrillCount || 0,
     },
   ];
   return (
@@ -348,10 +384,11 @@ export const ProgressLayout = () => {
             display: "flex",
             p: "16px",
             justifyContent: "space-between",
+            // alignItems:'center',
             borderBottom: "1px solid #ECECF3 ",
           }}
         >
-          <Box sx={{ display: "flex", gap: "20px" }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: "20px" }}>
             <Box
               sx={{
                 bgcolor: item.bgcolor,
@@ -404,10 +441,10 @@ export const ProgressLayout = () => {
                   fontFamily: "Urbanist",
                   fontWeight: "700",
                   fontSize: "14px",
-                  mt: "-12px",
+                  mt: "-20px",
                 }}
               >
-                {item.value}%
+                {item.value}
               </Typography>
             </CircularProgressbarWithChildren>
           </Box>
@@ -497,26 +534,32 @@ export const CenterFooter = () => {
 };
 
 export const StudentList = () => {
-  const studentList = [
-    {
-      name: "James Cooper",
-      studentId: "ST001",
-      age: 14,
-      status: "Active",
-    },
-    {
-      name: "Lisa Bryson",
-      studentId: "ST002",
-      age: 10,
-      status: "Inactive",
-    },
-    {
-      name: "John Carter",
-      studentId: "ST003",
-      age: 12,
-      status: "Active",
-    },
-  ];
+  const [activeChild, setActiveChild] = useState(0);
+
+  const {
+    data: students,
+    status,
+    error,
+  } = useSelector((state) => state.students);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchStudent());
+    }
+  }, []);
+
+  useEffect(() => {
+    if (activeChild === 0) dispatch(setSelectedChild(students[0]?.id));
+  });
+
+  if (status === "loading") {
+    return <p>Loading users....</p>;
+  }
+
+  if (status === "failed") {
+    return <p>Error:{error}</p>;
+  }
   return (
     <Box
       sx={{
@@ -531,89 +574,118 @@ export const StudentList = () => {
       >
         Student list
       </Typography>
-      {studentList.map((student, index) => (
-        <Box
-          key={index}
-          sx={{
-            p: "0 16px 0 16px",
-            height: "86px",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            borderRadius: "20px",
-            border: "1px solid #ECECF3",
-            backgroundImage:
-              index === 0
-                ? "linear-gradient(180deg,#922C8880,#922C88)"
-                : "#fff",
-          }}
-        >
-          <Box sx={{ display: "flex", gap: "14px" }}>
+      {console.log(students)}
+      {students.length ? (
+        students.map((child, index) => {
+          const isActive = index === activeChild;
+          return (
             <Box
-              sx={{
-                backgroundColor: "#EDF0F2",
-                backgroundImage: `url(${dp})`,
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "center",
-                borderRadius: "54px",
-                height: "54px",
-                width: "54px",
+              key={index}
+              onClick={() => {
+                setActiveChild(index);
+                dispatch(setSelectedChild(child.id));
               }}
-            ></Box>
-            <Box sx={{ color: index === 0 ? "#fff" : "#000" }}>
-              <Typography
-                sx={{
-                  fontFamily: "Urbanist",
-                  fontWeight: "700",
-                  fontSize: "16px",
-                }}
-              >
-                {student.name}
-              </Typography>
-              <Typography
-                sx={{
-                  fontFamily: "Urbanist",
-                  display: "flex",
-                  gap: "6px",
-                  fontWeight: "600",
-                  fontSize: "14px",
-                }}
-              >
-                {student.studentId}
-                <span
-                  style={{
-                    fontFamily: "Urbanist",
-                    color: index === 0 ? "#FFFFFF66" : "#828392",
+              sx={{
+                p: "0 16px 0 16px",
+                height: "86px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                borderRadius: "20px",
+                border: "1px solid #ECECF3",
+                backgroundImage: isActive
+                  ? "linear-gradient(180deg,#922C8880,#922C88)"
+                  : "#fff",
+              }}
+            >
+              <Box sx={{ display: "flex", gap: "14px" }}>
+                <Box
+                  sx={{
+                    backgroundColor: "#EDF0F2",
+                    backgroundImage: `url(${child.profile_image_url || dp})`,
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "center",
+                    borderRadius: "54px",
+                    height: "54px",
+                    width: "54px",
                   }}
-                >
-                  &#x2022; Age:
-                </span>
-                {student.age} Yrs
+                ></Box>
+                <Box sx={{ color: isActive ? "#fff" : "#000" }}>
+                  <Typography
+                    sx={{
+                      fontFamily: "Urbanist",
+                      fontWeight: "700",
+                      fontSize: "16px",
+                    }}
+                  >
+                    {child.full_name}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      fontFamily: "Urbanist",
+                      display: "flex",
+                      gap: "6px",
+                      fontWeight: "600",
+                      fontSize: "14px",
+                    }}
+                  >
+                    {child.student_code}
+                    <span
+                      style={{
+                        fontFamily: "Urbanist",
+                        color: index === 0 ? "#FFFFFF66" : "#828392",
+                      }}
+                    >
+                      &#x2022; Age:
+                    </span>
+                    {child.age}
+                  </Typography>
+                </Box>
+              </Box>
+              <Typography
+                sx={{
+                  display: "flex",
+                  textAlign: "center",
+                  bgcolor: "#FFFFFF",
+                  borderRadius: "15px",
+                  border: child.status
+                    ? "1px solid #008000"
+                    : "1px solid #DB0000ed",
+                  color: child.status ? "#008000" : "#DB0000ed",
+                  width: "61px",
+                  fontWeight: "600",
+                  fontSize: "12px",
+                  p: "6px",
+                  fontFamily: "Urbanist",
+                }}
+              >
+                &#x2022; {child.status ? "Active" : "Inactive"}
               </Typography>
             </Box>
-          </Box>
-          <Typography
+          );
+        })
+      ) : (
+        <>
+          <Box
             sx={{
+              p: "0 16px 0 16px",
+              height: "86px",
               display: "flex",
-              textAlign: "center",
-              bgcolor: "#FFFFFF",
-              borderRadius: "15px",
-              border:
-                student.status === "Active"
-                  ? "1px solid #008000"
-                  : "1px solid #DB0000ed",
-              color: student.status === "Active" ? "#008000" : "#DB0000ed",
-              // width: "61px",
-              fontWeight: "600",
-              fontSize: "12px",
-              p: "6px",
-              fontFamily: "Urbanist",
+              // justifyContent: "space-between",
+              alignItems: "center",
+              borderRadius: "20px",
+              border: "1px solid #ECECF3",
+              backgroundImage: "linear-gradient(180deg,#922C8880,#922C88)",
             }}
           >
-            &#x2022; {student.status}
-          </Typography>
-        </Box>
-      ))}
+            <Typography
+              sx={{ bgcolor: "#fff", borderRadius: "18px", p: "10px" }}
+            >
+              Add Child
+            </Typography>
+          </Box>
+        </>
+      )}
     </Box>
   );
 };
