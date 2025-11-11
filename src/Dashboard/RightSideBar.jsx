@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import React from "react";
-import { Calender, StudentList, TodayDetails } from "./DashboardComponets";
+import { Calender, PerformanceDetails, StudentList } from "./DashboardComponets";
 
 export default function RightSideBar() {
   return (
@@ -14,7 +14,7 @@ export default function RightSideBar() {
     >
         <StudentList/>
         <Calender/>
-        <TodayDetails/>
+        <PerformanceDetails/>
     </Box>
   );
 }

@@ -1,10 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import studentsReducer from "./studentSlice";
-import selectedChildIdReducer from "./selectedChildSlice";
+import {selectedChildReducer ,selectedDateReducer} from "./helperSlices";
 
 export const store = configureStore({
   reducer: {
     students: studentsReducer,
-    selectedChild: selectedChildIdReducer,
+    selectedChild: selectedChildReducer,
+    selectedDate: selectedDateReducer,
   },
 });

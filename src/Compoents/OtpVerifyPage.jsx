@@ -38,13 +38,13 @@ export default function OtpVerifyPage() {
     };
     try {
       const res = await postRequestRegister("/verify-otp", payload);
-      console.log(res);
+      // console.log(res);
       // localStorage.setItem("userData", JSON.stringify(res));
       if (res.status === 200) {
         if (rememberMe) {
-          localStorage.setItem("userData", JSON.stringify(res));
+          localStorage.setItem("userData", JSON.stringify(res.data));
         } else {
-          sessionStorage.setItem("userData", JSON.stringify(res));
+          sessionStorage.setItem("userData", JSON.stringify(res.data));
         }
         navigate("/dashboard");
       }

@@ -43,19 +43,19 @@ export default function LoginPage() {
     if (!validate) return;
     try {
       const res = await postRequestRegister("/login", loginData);
-      console.log(res.data);
-      localStorage.setItem("userData", JSON.stringify(res.data));
+      // console.log(res.data);
+      // localStorage.setItem("userData", JSON.stringify(res.data));
       if (res.status === 200) {
         navigate("/otp-verify", {
           state: { userData: res.data, rememberMe: checkBox },
         });
       } else {
-        console.log(res.response.data.message);
+        // console.log(res.response.data.message);
         const message = res.response.data.message;
         toast.error(message);
       }
     } catch (err) {
-      console.log("Login Error", err);
+      // console.log("Login Error", err);
       toast.error("Login Error", err);
     }
     // console.log(loginData);

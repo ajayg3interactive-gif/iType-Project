@@ -76,7 +76,7 @@ export default function Register() {
     if (!validate) return;
     try {
       const res = await postRequestRegister("/register", formData);
-      console.log("Registration success", res);
+      // console.log("Registration success", res);
       if (res.data) {
         toast.success("Registration success");
       }
@@ -84,7 +84,7 @@ export default function Register() {
       console.log(err);
       toast.error("Error", err);
     }
-    console.log(formData);
+    // console.log(formData);
   };
   return (
     <Box

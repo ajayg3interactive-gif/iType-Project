@@ -31,10 +31,10 @@ export default function ForgotPassword() {
     const validate = validationCheck();
     if (!validate) return;
     try {
-      console.log("check your mail...");
+      // console.log("check your mail...");
       toast.success("Check your email");
     } catch (err) {
-      console.log("Email is not registered");
+      // console.log("Email is not registered");
       toast.error("Email is not registered");
     }
   };

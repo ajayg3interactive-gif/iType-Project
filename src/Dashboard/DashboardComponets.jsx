@@ -18,6 +18,7 @@ import {
   ManWithQusMark,
   Settings,
   SpeedIcon,
+  StarIcon,
   TextIcon,
 } from "../Compoents/SvgIcons";
 import defaultAvatar from "../assets/Frame 2.png";
@@ -26,13 +27,15 @@ import dp from "../assets/image 3.png";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { getRequest } from "../Hooks/axiosRequests";
-import { getCurrentUser } from "../Hooks/HelperFunctions";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchStudent } from "../Store/studentSlice";
-import { setSelectedChild } from "../Store/selectedChildSlice";
+import { setSelectedChild, setSelectedDate } from "../Store/helperSlices";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { PickersDay } from "@mui/x-date-pickers/PickersDay";
+import { getCurrentUser } from "../Hooks/HelperFunctions";
 
 export const UserLog = () => {
-  const currentUser = JSON.parse(localStorage.getItem("userData"));
+  const currentUser = getCurrentUser();
 
   return (
     <Box
@@ -251,7 +254,7 @@ export const CircularProgressbar = () => {
   const selectedID = async () => {
     const res = await getRequest(`get-tasks-count/${childId}`);
     setTaskCount(res.data.data);
-    console.log(res.data);
+    // console.log(res.data);
   };
   useEffect(() => {
     if (childId) {
@@ -276,7 +279,7 @@ export const CircularProgressbar = () => {
       </Typography>
       <Box sx={{ width: "177px", ml: "16px", height: "177px" }}>
         <CircularProgressbarWithChildren
-          value={73}
+          value={(taskCount.completed_count / taskCount.total_count) * 100}
           strokeWidth={14}
           styles={buildStyles({
             strokeLinecap: "butt",
@@ -292,7 +295,7 @@ export const CircularProgressbar = () => {
               textAlign: "center",
             }}
           >
-            {taskCount?.completed_count}
+            {taskCount?.completed_count || 0}
             <Typography
               sx={{
                 fontFamily: "Urbanist",
@@ -301,7 +304,7 @@ export const CircularProgressbar = () => {
                 color: "#828392",
               }}
             >
-              /{taskCount.total_count || 0 } <br /> completed
+              /{taskCount.total_count || 0} <br /> completed
             </Typography>
           </span>
         </CircularProgressbarWithChildren>
@@ -323,9 +326,76 @@ export const CircularProgressbar = () => {
   );
 };
 
+export const TotalPoints = () => {
+  const childId = useSelector((state) => state.selectedChild.childId);
+  const [pointsData, setPointsData] = useState([]);
+
+  const fetchTotalPoints = async () => {
+    try {
+      const res = await getRequest(`/student-points/${childId}`);
+      // console.log(res.data);
+      setPointsData(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    if (childId) {
+      fetchTotalPoints();
+    }
+  }, [childId]);
+  return (
+    <Box
+      sx={{
+        bgcolor: "#fff",
+        borderRadius: "24px",
+        p: "10px 20px",
+        display: "flex",
+        // justifyContent:'center',
+        alignItems: "center",
+        gap: "20px",
+      }}
+    >
+      <Box
+        sx={{
+          bgcolor: "#FFC63A",
+          p: "10px",
+          borderRadius: "50px",
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <StarIcon />
+      </Box>
+      <Box>
+        <Typography
+          sx={{ fontFamily: "Urbanist", fontWeight: "700", fontSize: "18px" }}
+        >
+          Total Points Collected
+        </Typography>
+        <Typography
+          sx={{
+            fontFamily: "Urbanist",
+            fontWeight: "800",
+            fontSize: "28px",
+            color: "#FFC63A",
+          }}
+        >
+          {pointsData?.usedpoints?.points || 0} Points
+        </Typography>
+      </Box>
+    </Box>
+  );
+};
+
 export const ProgressLayout = () => {
   const childId = useSelector((state) => state.selectedChild.childId);
   const [drils, setDrils] = useState([]);
+
+  const parsedData = Object.fromEntries(
+    Object.entries(drils).map(([key, value]) => [key, parseFloat(value)])
+  );
 
   const selectedID = async () => {
     // console.log(childId);
@@ -348,7 +418,7 @@ export const ProgressLayout = () => {
       border: "#c6f1ffff",
       head: "Speed Drills",
       subHead: "Measuring your learning outcome.",
-      value: drils?.speedAccDrillCount || 0,
+      value: parsedData?.speedAccDrillCount || 0,
     },
     // {
     //   icon: <AccuracyIcon />,
@@ -364,7 +434,7 @@ export const ProgressLayout = () => {
       border: "#ffb18fff",
       head: "Text Drills",
       subHead: "Practice improves your touch typing.",
-      value: drils?.textDrillCount || 0,
+      value: parsedData?.textDrillCount || 0,
     },
     {
       icon: <GameIcon />,
@@ -372,7 +442,7 @@ export const ProgressLayout = () => {
       border: "#e3ffb5ff",
       head: "Games",
       subHead: "Learning and having fun at the same time.",
-      value: drils?.gameDrillCount || 0,
+      value: parsedData?.gameDrillCount || 0,
     },
   ];
   return (
@@ -382,7 +452,7 @@ export const ProgressLayout = () => {
           key={index}
           sx={{
             display: "flex",
-            p: "16px",
+            p: "13px",
             justifyContent: "space-between",
             // alignItems:'center',
             borderBottom: "1px solid #ECECF3 ",
@@ -402,6 +472,7 @@ export const ProgressLayout = () => {
               }}
             >
               {item.icon}
+              {/* {console.log(drils)} */}
             </Box>
             <Box sx={{ display: "flex", flexDirection: "column" }}>
               <Typography
@@ -444,7 +515,7 @@ export const ProgressLayout = () => {
                   mt: "-20px",
                 }}
               >
-                {item.value}
+                {item.value}%
               </Typography>
             </CircularProgressbarWithChildren>
           </Box>
@@ -551,7 +622,7 @@ export const StudentList = () => {
 
   useEffect(() => {
     if (activeChild === 0) dispatch(setSelectedChild(students[0]?.id));
-  });
+  }, [status]);
 
   if (status === "loading") {
     return <p>Loading users....</p>;
@@ -574,7 +645,7 @@ export const StudentList = () => {
       >
         Student list
       </Typography>
-      {console.log(students)}
+      {/* {console.log(students)} */}
       {students.length ? (
         students.map((child, index) => {
           const isActive = index === activeChild;
@@ -691,22 +762,87 @@ export const StudentList = () => {
 };
 
 export const Calender = () => {
+  const [selected, setSelected] = useState(dayjs());
+  const [datesFetch, setDatesFetch] = useState([]);
+  const dispatch = useDispatch();
+  const childId = useSelector((state) => state.selectedChild.childId);
+
+  const handleDateChange = (newValue) => {
+    if (!newValue) return;
+    setSelected(newValue);
+    const formatted = dayjs(newValue).format("YYYY-MM-DD");
+    dispatch(setSelectedDate(formatted));
+  };
+
+  useEffect(() => {
+    if (childId) {
+      fetchActiveDates();
+    }
+  }, [selected, childId]);
+
+  const fetchActiveDates = async () => {
+    const date = selected.format("YYYY-MM-DD");
+    try {
+      const res = await getRequest(
+        `get-activity-dates/${childId}?date=${date}`
+      );
+      const dates = res?.data?.data || [];
+      setDatesFetch(dates);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const CustomDay = (props) => {
+    const { day, outsideCurrentMonth, ...other } = props;
+    const formattedDay = day.format("YYYY-MM-DD");
+    const isActive = datesFetch.includes(formattedDay);
+
+    return (
+      <Box sx={{ position: "relative" }}>
+        <PickersDay
+          day={day}
+          outsideCurrentMonth={outsideCurrentMonth}
+          {...other}
+        />
+        {isActive && (
+          <CheckCircleIcon
+            sx={{
+              position: "absolute",
+              bottom: 0,
+              right: "50%",
+              transform: "translateX(50%)",
+              fontSize: 13,
+              color: "green",
+              bgcolor: "#fff",
+              borderRadius: "20px",
+            }}
+          />
+        )}
+      </Box>
+    );
+  };
+
   return (
     <Box sx={{ borderBottom: "1px solid #ECECF3" }}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DateCalendar
+          value={selected}
+          onChange={handleDateChange}
+          slots={{
+            day: CustomDay,
+          }}
           sx={{
             "& .MuiPickersDay-today": {
               background: "#922C88",
-              //   borderColor: "#922C88", // Example: blue border for today
-              color: "white", // Example: blue text for today
+              color: "white",
               "&:hover": { bgcolor: "#922C88" },
             },
             "& .MuiPickersDay-root.Mui-selected": {
-              backgroundColor: "purple", // Your desired color
-              color: "white", // Text color for contrast
+              backgroundColor: "purple",
+              color: "white",
               "&:hover": {
-                backgroundColor: "darkpurple", // Hover color for selected date
+                backgroundColor: "darkpurple",
               },
             },
           }}
@@ -716,8 +852,34 @@ export const Calender = () => {
   );
 };
 
-export const TodayDetails = () => {
-  const [date] = useState(dayjs());
+export const PerformanceDetails = () => {
+  const dateString = useSelector((state) => state.selectedDate.date);
+  const date = dayjs(dateString);
+  const formattedDate = date.format("YYYY-MM-DD");
+  const childId = useSelector((state) => state.selectedChild.childId);
+  const [performanceData, setPerformanceData] = useState([]);
+  // console.log("----", date);
+
+  useEffect(() => {
+    if (childId) {
+      fetchActivityPerformance();
+    }
+  }, [childId, dateString]);
+  const fetchActivityPerformance = async () => {
+    try {
+      const res = await getRequest(
+        `get-activity-performance/${childId}/${formattedDate}`
+      );
+      // console.log(res.data);
+      setPerformanceData(res.data.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const second =
+    performanceData?.text_drill_counts?.total_spend_time_seconds || 0;
+  const mins = Math.floor(second / 60);
+  const sec = second % 60;
   return (
     <Box sx={{ display: "flex", flexDirection: "column", mb: "20px" }}>
       <Typography
@@ -728,7 +890,7 @@ export const TodayDetails = () => {
           pt: "20px",
         }}
       >
-        Today, {date.format("DD MMM YYYY")}
+        Today, {date.format("DD-MMM-YY")}
       </Typography>
       <Box
         sx={{
@@ -752,16 +914,16 @@ export const TodayDetails = () => {
           <Typography
             sx={{
               fontFamily: "Urbanist",
-              fontWeight: "500",
+              fontWeight: "650",
               fontSize: "14px",
               display: "flex",
               alignItems: "center",
               gap: "5px",
             }}
           >
-            10:32:10 - 10:32:50
+            Total time spent
             <span style={{ fontFamily: "Urbanist", fontWeight: "700" }}>
-              (0m 40s)
+              ( {mins} min: {sec} s )
             </span>
           </Typography>
         </Box>
@@ -788,7 +950,7 @@ export const TodayDetails = () => {
                 fontSize: "28px",
               }}
             >
-              50
+              {performanceData?.text_drill_counts?.word_per_min || 0}
             </Typography>
           </Box>
           <Box
@@ -797,7 +959,7 @@ export const TodayDetails = () => {
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "space-between",
-              // height:'84px'
+              height: "84px",
             }}
           >
             <Typography sx={{ fontFamily: "Urbanist" }}>Error</Typography>
@@ -808,7 +970,7 @@ export const TodayDetails = () => {
                 fontSize: "28px",
               }}
             >
-              8
+              {performanceData?.text_drill_counts?.avg_wrong_key || 0}
             </Typography>
           </Box>
           <Box
@@ -817,13 +979,13 @@ export const TodayDetails = () => {
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "space-between",
-              // height:'84px'
+              height: "84px",
             }}
           >
             <Typography sx={{ fontFamily: "Urbanist" }}>Accuracy</Typography>
-            <Box sx={{ height: "54px", width: "54px" }}>
+            <Box sx={{ width: "58px", mt: "10px" }}>
               <CircularProgressbarWithChildren
-                value={8}
+                value={performanceData?.text_drill_counts?.accuracy_percentage}
                 // text={`${80}%`}
                 strokeWidth={10}
                 styles={buildStyles({
@@ -836,12 +998,13 @@ export const TodayDetails = () => {
                 <Typography
                   sx={{
                     fontFamily: "Urbanist",
-                    fontWeight: "700",
-                    fontSize: "14px",
-                    mt: "-12px",
+                    fontWeight: "600",
+                    fontSize: "12px",
+                    mt: "-17px",
                   }}
                 >
-                  8%
+                  {performanceData?.text_drill_counts?.accuracy_percentage || 0}
+                  %
                 </Typography>
               </CircularProgressbarWithChildren>
             </Box>

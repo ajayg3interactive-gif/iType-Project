@@ -5,9 +5,12 @@ import {
   CenterFooter,
   CircularProgressbar,
   ProgressLayout,
+  TotalPoints,
 } from "./DashboardComponets";
+import { getCurrentUser } from "../Hooks/HelperFunctions";
 
 export default function CenterLayout() {
+  const currentUser = getCurrentUser();
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: "20px" }}>
       <Box
@@ -38,7 +41,7 @@ export default function CenterLayout() {
               fontFamily: "Urbanist",
             }}
           >
-            Welcome back Patricia
+            Welcome back {currentUser.first_name}
           </Typography>
           <Typography sx={{ color: "#FFFFFFB2", fontFamily: "Urbanist" }}>
             Exciting news! You’ve won a prize. <br /> Tap the button below to
@@ -73,17 +76,27 @@ export default function CenterLayout() {
         </Box>
         <Box
           sx={{
-            bgcolor: "#fff",
+            bgcolor: "#F7F7F7",
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
             height: "376px",
-            borderRadius: "24px",
-            overflow: "auto",
-             "&::-webkit-scrollbar": {
-            // here i make the scrollbar hidden -------------------------------------------------------
-            display: "none",
-          },
           }}
         >
-          <ProgressLayout />
+          <TotalPoints />
+          <Box
+            sx={{
+              bgcolor: "#fff",
+              borderRadius: "24px",
+              overflow: "auto",
+              "&::-webkit-scrollbar": {
+                // here i make the scrollbar hidden -------------------------------------------------------
+                display: "none",
+              },
+            }}
+          >
+            <ProgressLayout />
+          </Box>
         </Box>
       </Box>
       <CenterFooter />

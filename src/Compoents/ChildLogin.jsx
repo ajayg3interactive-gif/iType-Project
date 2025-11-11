@@ -42,7 +42,7 @@ export default function ChildLogin() {
 
     try {
       const res = await postRequestRegister("/student-login", childLoginData);
-      console.log(res);
+      // console.log(res);
     } catch (err) {
       console.log(err);
     }
